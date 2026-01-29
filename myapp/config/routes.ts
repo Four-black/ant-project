@@ -290,6 +290,12 @@ export default [
         path: '/class/experiments',
         component: './class/experiments',
       },
+      {
+        name: 'example',
+        icon: 'smile',
+        path: '/class/example',
+        component: './class/example',
+      },
     ],
   },
   {

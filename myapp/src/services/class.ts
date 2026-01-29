@@ -14,3 +14,14 @@ export async function queryClassList() {
     skipErrorHandler: true,
   });
 }
+
+/** 获取课程详情 GET /api/courseInfo/get/${id} */
+export async function getCourseDetail(id: string | number) {
+  return request<{
+    code: string | number;
+    msg: string;
+    data: any;
+  }>(`${BACKEND_URL}/api/courseInfo/get/${id}`, {
+    method: 'GET',
+  });
+}

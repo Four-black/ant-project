@@ -3,11 +3,16 @@ package com.example.demo.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.Result;
+import com.example.demo.dto.CourseCreateDTO;
+import com.example.demo.entity.Chapter;
 import com.example.demo.entity.CourseInfo;
+import com.example.demo.service.ChapterService;
 import com.example.demo.service.CourseInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,11 +25,38 @@ public class CourseInfoController {
     @Autowired
     private CourseInfoService courseInfoService;
 
+    @Autowired
+    private ChapterService chapterService;
+
+    /**
+     * 创建课程（包含章节）
+     */
+    @PostMapping("/create")
+    @Transactional
+    public Result createCourse(@RequestBody CourseCreateDTO dto) {
+        // 设置创建时间
+        dto.getCourseInfo().setCreateTime(LocalDateTime.now());
+        dto.getCourseInfo().setUpdateTime(LocalDateTime.now());
+        
+        // 保存课程基本信息
+        courseInfoService.save(dto.getCourseInfo());
+        Long courseId = dto.getCourseInfo().getId();
+        
+        // 保存章节
+        if (dto.getChapters() != null && !dto.getChapters().isEmpty()) {
+            chapterService.batchSaveChapters(courseId, dto.getChapters());
+        }
+        
+        return Result.success(courseId);
+    }
+
     /**
      * 新增课程
      */
     @PostMapping("/add")
     public Result add(@RequestBody CourseInfo courseInfo) {
+        courseInfo.setCreateTime(LocalDateTime.now());
+        courseInfo.setUpdateTime(LocalDateTime.now());
         courseInfoService.save(courseInfo);
         return Result.success();
     }
@@ -57,12 +89,18 @@ public class CourseInfoController {
     }
 
     /**
-     * 根据ID查询
+     * 根据ID查询课程（包含章节）
      */
     @GetMapping("/get/{id}")
     public Result getById(@PathVariable Long id) {
         CourseInfo courseInfo = courseInfoService.getById(id);
-        return Result.success(courseInfo);
+        List<Chapter> chapters = chapterService.getChaptersByCourseId(id);
+        
+        CourseCreateDTO result = new CourseCreateDTO();
+        result.setCourseInfo(courseInfo);
+        result.setChapters(chapters);
+        
+        return Result.success(result);
     }
 
     /**

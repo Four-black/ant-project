@@ -28,6 +28,9 @@ package-lock.json
 functions/*
 .temp/**
 
+# cache
+/types/cache/
+
 # umi
 .umi
 .umi-production
