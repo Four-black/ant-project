@@ -23,3 +23,23 @@ CREATE TABLE IF NOT EXISTS `chapter_contents` (
   INDEX `idx_chapter_id` (`chapter_id`),
   INDEX `idx_content_order` (`content_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='章节知识点表';
+-- 课程表
+CREATE TABLE `course_info` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '课程ID',
+  `course_name` varchar(100) NOT NULL COMMENT '课程名称',
+  `instructor` varchar(50) NOT NULL COMMENT '授课教师',
+  `start_time` date NOT NULL COMMENT '开始时间',
+  `end_time` date NOT NULL COMMENT '结束时间',
+  `cover_image` varchar(255) DEFAULT NULL COMMENT '课程封面图片URL',
+  `duration` varchar(50) DEFAULT NULL COMMENT '课程时长',
+  `description` text COMMENT '课程简介',
+  `prerequisites` text COMMENT '预备知识',
+  `experiment_count` int DEFAULT '0' COMMENT '课程包含实验数量',
+  `reference_materials` text COMMENT '参考资料',
+  `extra_field1` varchar(255) DEFAULT NULL COMMENT '备用字段1',
+  `extra_field2` varchar(255) DEFAULT NULL COMMENT '备用字段2',
+  `extra_field3` varchar(255) DEFAULT NULL COMMENT '备用字段3',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='课程信息表';
